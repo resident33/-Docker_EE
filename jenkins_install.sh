@@ -12,5 +12,12 @@ apt-get update
 apt-get install openjdk-8-jdk -y
 apt-get install jenkins -y
 
-JenkinsPass=$(cat /var/lib/jenkins/secrets/initialAdminPassword)
-java -version
+jenkinspass=$(cat /var/lib/jenkins/secrets/initialAdminPassword)
+
+echo -e  "Jenkins Activation Password: \e[34m $jenkinpass"
+
+ipaddr=$(ifconfig | sed -En 's/127.0.0.1//;s/172.17.*//;s/10.0.*//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
+echo -e "Jenkins server adress: \e[34m $ipaddr:8080" 
+
+
+
