@@ -1,6 +1,6 @@
 hosts = [
     { name: 'vm-jenkinsmaster',   box: 'ubuntu/xenial64',	        mem: 2048,	netint: 1 },
-    { name: 'vm-swarmmaster',     box: 'ubuntu/xenial64',		mem: 2048,	netint: 2 },
+    { name: 'vm-swarmmaster',     box: 'ubuntu/xenial64',		mem: 4192,	netint: 2 },
     { name: 'vm-swarmslave1',     box: 'ubuntu/xenial64',		mem: 2048,	netint: 3 }
 ]
 
