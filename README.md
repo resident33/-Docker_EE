@@ -53,4 +53,35 @@ Also, need to create jenkins_install.sh and docker_install.sh files, which is ne
  ![Swarm_slave](https://github.com/resident33/-Docker_EE/blob/Dev/src/4_SwarmSlave1Output.jpg)
  
 Next, go to the installation UCP and DTR on the swarmmaster node.
-### **UCP and DTR install**
+### **Universal Control Panel and Docker Trusted Registry install**
+
+**Connect to swarmmaster**
+```shell
+vagrant ssh vm-swarmmaster
+```
+**Pull the latest version of UCP**
+```shell
+docker image pull docker/ucp:3.1.6
+```
+ ![Pull_image_UCP](https://github.com/resident33/-Docker_EE/blob/Dev/src/6.1_Install%20UCP%20pull%20Image.jpg)
+
+**Install UCP**
+```shell
+docker container run --rm -it --name ucp -v /var/run/docker.sock:/var/run/docker.sock docker/ucp:3.1.6 install --host-address 10.10.102.221 --interactive
+```
+ ![Install_UCP_Result](https://github.com/resident33/-Docker_EE/blob/Dev/src/6.2_Install%20UCP%20finish%20.jpg)
+ 
+ ![UCP_Web_UI](https://github.com/resident33/-Docker_EE/blob/Dev/src/6.3.0_UCP%20web%20UI%20.jpg)
+ 
+ ![UCP_Dashboard](https://github.com/resident33/-Docker_EE/blob/Dev/src/6.3_Install%20UCP%20dashboard%20.jpg)
+ 
+ **Install DTR**
+ ```shell
+docker run -it --rm docker/dtr install  --ucp-node vm-swarmmaster  --ucp-username resident  --ucp-url https://10.10.102.221:1443 --ucp-insecure-tls
+```
+ ![Install_DTR](https://github.com/resident33/-Docker_EE/blob/Dev/src/6.4_Install%20DTR%20.jpg)
+ 
+ Also we can see DTR install status in UCP. Navigate to the Admin Settings page and in the left pane and click Docker Trusted Registry.
+  ![Install_DTR_UCP](https://github.com/resident33/-Docker_EE/blob/Dev/src/6.4.2_Install%20DTR%20.jpg)
+  
+  ### **Connect Jankins Slave to Jankins Master**
