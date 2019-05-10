@@ -21,24 +21,24 @@ Our infrastructure consist of 3 nodes:
 * **vm-swarm_slave** - is a WORKER NODE of the Docker Swarm cluster. It includes installed Docker Enterprise Edition with Docker Swarm and Docker Compose
 # **Let's start**
 ### **Configure Vagrant**
-Initialize the directory as a Vagrant environment by creating the initial Vagrant file with the command:
+ Initialize the directory as a Vagrant environment by creating the initial Vagrant file with the command:
 ```shell
 vagrant init
 ```
-![Vagrant_init_result](https://github.com/resident33/-Docker_EE/blob/Dev/src/1_Vagrant%20init.jpg)
+  ![Vagrant_init_result](https://github.com/resident33/-Docker_EE/blob/Dev/src/1_Vagrant%20init.jpg)
 
-After that edit vagrantfile for our infrastructure.
+ After that edit vagrantfile for our infrastructure.
 
  **Example Vagrant config:**
- ![Vagrant_config](https://github.com/resident33/-Docker_EE/blob/Dev/src/1.1_Vagrant%20file.jpg)
+  ![Vagrant_config](https://github.com/resident33/-Docker_EE/blob/Dev/src/1.1_Vagrant%20file.jpg)
  
-Also, need to create jenkins_install.sh and docker_install.sh files, which is needed to install the necessary tools on our nodes.
+ Also, need to create jenkins_install.sh and docker_install.sh files, which is needed to install the necessary tools on our nodes.
 
  **Example jenkins_install.sh:**
- ![Jenkins_install](https://github.com/resident33/-Docker_EE/blob/Dev/src/1.2_Jenkins%20install%20file.jpg)
+  ![Jenkins_install](https://github.com/resident33/-Docker_EE/blob/Dev/src/1.2_Jenkins%20install%20file.jpg)
 
  **Example docker_install.sh:**
- ![Docker_install](https://github.com/resident33/-Docker_EE/blob/Dev/src/1.3_Docker%20install%20file.jpg)
+  ![Docker_install](https://github.com/resident33/-Docker_EE/blob/Dev/src/1.3_Docker%20install%20file.jpg)
  
  **Note:** To install Docker Enterprice Edition, you need to activate the a trial license [here](https://store.docker.com/my-content "Getting Started with Docker Enterprise")
  ![Docker_Enterprice](https://github.com/resident33/-Docker_EE/blob/Dev/src/1.4_Note%20Docker%20Enterpice.jpg)
@@ -52,7 +52,7 @@ Also, need to create jenkins_install.sh and docker_install.sh files, which is ne
  **Swarm Slave**
  ![Swarm_slave](https://github.com/resident33/-Docker_EE/blob/Dev/src/4_SwarmSlave1Output.jpg)
  
-Next, go to the installation UCP and DTR on the swarmmaster node.
+ Next, go to the installation UCP and DTR on the swarmmaster node.
 ### **Universal Control Panel and Docker Trusted Registry install**
 
 **Connect to swarmmaster**
@@ -84,4 +84,68 @@ docker run -it --rm docker/dtr install  --ucp-node vm-swarmmaster  --ucp-usernam
  Also we can see DTR install status in UCP. Navigate to the Admin Settings page and in the left pane and click Docker Trusted Registry.
   ![Install_DTR_UCP](https://github.com/resident33/-Docker_EE/blob/Dev/src/6.4.2_Install%20DTR%20.jpg)
   
-  ### **Connect Jankins Slave to Jankins Master**
+  ### **Connect Jenkins Slave to Jankins Master**
+  
+ The next step is to set up the slave nodes server. To do so, you need to install java on your server then create a Jenkins user.
+  
+  **Install Java**
+  
+ Start by installing the software packages then include the PPA repository for java. This will be accomplished using the apt-get command:
+  
+  ```shell
+sudo apt-get install software-properties-common apt-transport-https -y
+sudo add-apt-repository ppa:openjdk-r/ppa -y
+```
+ Use the following command to install java OpenJDK.
+
+```shell
+sudo apt-get install openjdk-8-jdk -y
+```
+  **Adding a New User for Jenkins**
+
+```shell
+sudo useradd -m -s /bin/bash Jenkins
+sudo passwd Jenkins
+```
+  **Login as Jenkins user and generate SSH keys**
+
+ ```shell
+su Jenkins
+mkdir ~/.ssh && cd ~/.ssh
+ssh-keygen -t rsa -C "Key for Jenkins slaves"
+cat id_rsa.pub > ~/.ssh/authorized_keys
+```
+ ![Generate_SHA_Key_swarmmaster](https://github.com/resident33/-Docker_EE/blob/Dev/src/8.1_Generate%20SHA_key%20for%20swarmmaster.jpg) 
+ 
+ ```shell
+cat id_rsa
+```
+ 
+ ![SHA_Key_swarmmaster](https://github.com/resident33/-Docker_EE/blob/Dev/src/8.2_Generate%20SHA_key%20for%20swarmmaster.jpg)
+
+  **Add the private key to jenkins credential list**
+  
+ Go to jenkins dashboard –> credentials –> Global credentials –> add credentials , select and enter all the credentials as shown below and click ok.
+
+ ![Jenkins_add_Global_credentials](https://github.com/resident33/-Docker_EE/blob/Dev/src/7.4%20Jenkins%20add%20credentials.jpg)
+ 
+  **Setting up Jenkins slaves using username and private key**
+  
+ Head over to Jenkins dashboard –> Manage Jenkins –> Manage Nodes. Select New Node option. Give it a name, select the “permanent agent” option and click ok.
+
+ ![Add_Jenkins_Slave](https://github.com/resident33/-Docker_EE/blob/Dev/src/9_Add%20jenkins%20slave.jpg)
+ 
+ Save the changes and make sure the master server is connected to all the agent nodes before launching the agent services.
+Once the master level has connected successfully to the agent nodes, you will see the screen below:
+
+  ![Jenkins_Slave_Status](https://github.com/resident33/-Docker_EE/blob/Dev/src/9.1_Jenkins%20slave%20status.jpg)
+  
+ Now, the slave nodes have been added successfully to the Jenkins master server.
+
+  ### **Create Swarm Cluster**
+  
+
+
+
+
+
